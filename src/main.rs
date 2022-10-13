@@ -11,10 +11,9 @@ struct Cli {
     ip: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 struct ResponseAPI {
     ip: String,
-    hostname: String,
     city: String,
     region: String,
     country: String,
@@ -43,7 +42,6 @@ async fn main() {
         reqwest::StatusCode::OK => {
             let response: ResponseAPI = res.json().await.unwrap();
             println!("IP: {}", response.ip);
-            println!("Hostname: {}", response.hostname);
             println!("City: {}", response.city);
             println!("Region: {}", response.region);
             println!("Country: {}", response.country);
