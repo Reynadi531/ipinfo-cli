@@ -13,14 +13,24 @@ struct Cli {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 struct ResponseAPI {
-    ip: String,
-    city: String,
-    region: String,
-    country: String,
-    loc: String,
-    org: String,
-    postal: String,
-    timezone: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    ip: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    hostname: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    city: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    region: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    country: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    loc: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    org: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    postal: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    timezone: Option<String>,
 }
 
 #[tokio::main]
@@ -41,14 +51,15 @@ async fn main() {
     match res.status() {
         reqwest::StatusCode::OK => {
             let response: ResponseAPI = res.json().await.unwrap();
-            println!("IP: {}", response.ip);
-            println!("City: {}", response.city);
-            println!("Region: {}", response.region);
-            println!("Country: {}", response.country);
-            println!("Location: {}", response.loc);
-            println!("Organization: {}", response.org);
-            println!("Postal: {}", response.postal);
-            println!("Timezone: {}", response.timezone);
+            println!("IP: {:?}", response.ip.as_deref().unwrap_or(""));
+            println!("Hostname: {:?}", response.hostname.as_deref().unwrap_or(""));
+            println!("City: {:?}", response.city.as_deref().unwrap_or(""));
+            println!("Region: {:?}", response.region.as_deref().unwrap_or(""));
+            println!("Country: {:?}", response.country.as_deref().unwrap_or(""));
+            println!("Location: {:?}", response.loc.as_deref().unwrap_or(""));
+            println!("Organization: {:?}", response.org.as_deref().unwrap_or(""));
+            println!("Postal: {:?}", response.postal.as_deref().unwrap_or(""));
+            println!("Timezone: {:?}", response.timezone.as_deref().unwrap_or(""));
         }
         reqwest::StatusCode::TOO_MANY_REQUESTS => {
             println!("Too many requests, you're being rate limited");
